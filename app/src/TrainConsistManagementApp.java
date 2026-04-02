@@ -88,5 +88,19 @@ public class TrainConsistManagementApp {
         formation.add("Sleeper"); // duplicate (ignored)
 
         System.out.println("Train Formation (No duplicates, ordered): " + formation);
+
+        // ---------------- UC6 ----------------
+        System.out.println("\n--- UC6: Bogie Capacity Mapping using HashMap ---");
+
+        HashMap<String, Integer> capacityMap = new HashMap<>();
+
+        capacityMap.put("Sleeper", 72);
+        capacityMap.put("AC Chair", 60);
+        capacityMap.put("First Class", 24);
+
+        // iterate using entrySet
+        for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
+            System.out.println("Bogie: " + entry.getKey() + " -> Capacity: " + entry.getValue());
+        }
     }
 }
