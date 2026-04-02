@@ -36,5 +36,20 @@ public class TrainConsistManagementApp {
 
         // Final state
         System.out.println("Final train consist: " + train);
+
+        // ---------------- UC3 ----------------
+        System.out.println("\n--- UC3: Unique Bogie IDs using HashSet ---");
+
+        Set<String> bogieIds = new HashSet<>();
+
+        // Adding bogie IDs
+        bogieIds.add("B1");
+        bogieIds.add("B2");
+        bogieIds.add("B3");
+        bogieIds.add("B2"); // duplicate
+        bogieIds.add("B1"); // duplicate
+
+        // Display unique IDs
+        System.out.println("Unique Bogie IDs: " + bogieIds);
     }
 }
