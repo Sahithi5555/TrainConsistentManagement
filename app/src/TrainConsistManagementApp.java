@@ -74,5 +74,19 @@ public class TrainConsistManagementApp {
         consist.removeLast();
 
         System.out.println("Final train consist: " + consist);
+
+        // ---------------- UC5 ----------------
+        System.out.println("\n--- UC5: LinkedHashSet Ordered Unique Bogies ---");
+
+        LinkedHashSet<String> formation = new LinkedHashSet<>();
+
+        formation.add("Engine");
+        formation.add("Sleeper");
+        formation.add("Cargo");
+        formation.add("Guard");
+
+        formation.add("Sleeper"); // duplicate (ignored)
+
+        System.out.println("Train Formation (No duplicates, ordered): " + formation);
     }
 }
