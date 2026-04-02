@@ -51,5 +51,28 @@ public class TrainConsistManagementApp {
 
         // Display unique IDs
         System.out.println("Unique Bogie IDs: " + bogieIds);
+
+        // ---------------- UC4 ----------------
+        System.out.println("\n--- UC4: LinkedList Train Operations ---");
+
+        LinkedList<String> consist = new LinkedList<>();
+
+        // Add bogies
+        consist.add("Engine");
+        consist.add("Sleeper");
+        consist.add("AC");
+        consist.add("Cargo");
+        consist.add("Guard");
+
+        // Insert Pantry Car at position 2
+        consist.add(2, "Pantry Car");
+
+        System.out.println("After insertion: " + consist);
+
+        // Remove first and last bogie
+        consist.removeFirst();
+        consist.removeLast();
+
+        System.out.println("Final train consist: " + consist);
     }
 }
