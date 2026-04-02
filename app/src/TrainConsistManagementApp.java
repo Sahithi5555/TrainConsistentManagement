@@ -102,5 +102,35 @@ public class TrainConsistManagementApp {
         for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
             System.out.println("Bogie: " + entry.getKey() + " -> Capacity: " + entry.getValue());
         }
+
+        // ---------------- UC7 ----------------
+        System.out.println("\n--- UC7: Sorting Bogies using Comparator ---");
+
+        List<Bogie> bogieList = new ArrayList<>();
+
+        bogieList.add(new Bogie("Sleeper", 72));
+        bogieList.add(new Bogie("AC Chair", 60));
+        bogieList.add(new Bogie("First Class", 24));
+
+        // sort using comparator (ascending capacity)
+        bogieList.sort(Comparator.comparingInt(b -> b.capacity));
+
+        System.out.println("Sorted Bogies by Capacity:");
+        for (Bogie b : bogieList) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
+    }
+}
+
+
+// Bogie Class (UC7)
+class Bogie {
+    String name;
+    int capacity;
+
+    Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+
     }
 }
