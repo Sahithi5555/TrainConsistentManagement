@@ -149,6 +149,15 @@ public class TrainConsistManagementApp {
                 System.out.println("  " + b.name + " -> " + b.capacity);
             }
         }
+
+        // ---------------- UC10 ----------------
+        System.out.println("\n--- UC10: Total Seating Capacity ---");
+
+        int totalCapacity = bogieList.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
+
+
     }
 }
 
