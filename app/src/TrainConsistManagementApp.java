@@ -122,6 +122,19 @@ public class TrainConsistManagementApp {
     }
 }
 
+ // ---------------- UC8 ----------------
+        System.out.println("\n--- UC8: Stream Filtering (Capacity > 60) ---");
+
+        List<Bogie> filtered = bogieList.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        System.out.println("Filtered Bogies:");
+        for (Bogie b : filtered) {
+            System.out.println(b.name + " -> " + b.capacity);
+        }
+    }
+}
 
 // Bogie Class (UC7)
 class Bogie {
