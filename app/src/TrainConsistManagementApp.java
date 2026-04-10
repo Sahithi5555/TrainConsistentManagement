@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
@@ -119,8 +120,6 @@ public class TrainConsistManagementApp {
         for (Bogie b : bogieList) {
             System.out.println(b.name + " -> " + b.capacity);
         }
-    }
-}
 
  // ---------------- UC8 ----------------
         System.out.println("\n--- UC8: Stream Filtering (Capacity > 60) ---");
@@ -133,8 +132,26 @@ public class TrainConsistManagementApp {
         for (Bogie b : filtered) {
             System.out.println(b.name + " -> " + b.capacity);
         }
+
+        // ---------------- UC9 ----------------
+        System.out.println("\n--- UC9: Grouping Bogies using Streams ---");
+
+        Map<String, List<Bogie>> grouped = bogieList.stream()
+                .collect(Collectors.groupingBy(b -> {
+                    if (b.capacity >= 60) return "High Capacity";
+                    else return "Low Capacity";
+                }));
+
+        // display grouped data
+        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+            System.out.println(entry.getKey() + ":");
+            for (Bogie b : entry.getValue()) {
+                System.out.println("  " + b.name + " -> " + b.capacity);
+            }
+        }
     }
 }
+
 
 // Bogie Class (UC7)
 class Bogie {
