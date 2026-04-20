@@ -17,7 +17,6 @@ public class TrainConsistManagementApp {
 
         // UC3
         Set<String> ids = new HashSet<>(Arrays.asList("B1","B2","B2"));
-        System.out.println(ids);
 
         // UC4
         LinkedList<String> ll = new LinkedList<>(Arrays.asList("Engine","Sleeper","Cargo"));
@@ -26,7 +25,6 @@ public class TrainConsistManagementApp {
 
         // UC5
         Set<String> set = new LinkedHashSet<>(Arrays.asList("Engine","Sleeper","Sleeper"));
-        System.out.println(set);
 
         // UC6
         Map<String,Integer> map = new HashMap<>();
@@ -36,15 +34,14 @@ public class TrainConsistManagementApp {
         List<PassengerBogie> list = new ArrayList<>();
         try {
             list.add(new PassengerBogie("Sleeper",72));
-            list.add(new PassengerBogie("Bad",0)); // exception
+            list.add(new PassengerBogie("Bad",0));
         } catch(Exception e){ System.out.println(e.getMessage()); }
 
         // UC8
         list.stream().filter(b->b.capacity>50).forEach(b->System.out.println(b.name));
 
         // UC9
-        Map<String,List<PassengerBogie>> grp =
-                list.stream().collect(Collectors.groupingBy(b->b.capacity>50?"High":"Low"));
+        list.stream().collect(Collectors.groupingBy(b->b.capacity>50?"High":"Low"));
 
         // UC10
         int total = list.stream().map(b->b.capacity).reduce(0,Integer::sum);
@@ -53,12 +50,8 @@ public class TrainConsistManagementApp {
         System.out.println(Pattern.matches("TRN-\\d{4}","TRN-1234"));
 
         // UC12
-        List<GoodsBogie> goods = Arrays.asList(
-                new GoodsBogie("Cylindrical","Petroleum")
-        );
-        boolean safe = goods.stream().allMatch(g ->
-                !g.type.equals("Cylindrical") || g.cargo.equals("Petroleum"));
-        System.out.println("Safe: "+safe);
+        List<GoodsBogie> goods = Arrays.asList(new GoodsBogie("Cylindrical","Petroleum"));
+        goods.stream().allMatch(g -> !g.type.equals("Cylindrical") || g.cargo.equals("Petroleum"));
 
         // UC13
         long t1 = System.nanoTime();
@@ -71,23 +64,40 @@ public class TrainConsistManagementApp {
             validateCargo(new GoodsBogie("Rectangular","Petroleum"));
         } catch(Exception e){
             System.out.println(e.getMessage());
-        } finally {
-            System.out.println("Done");
         }
 
-        // UC16 (Bubble Sort)
+        // UC16
         int[] arr = {5,3,8,1};
         for(int i=0;i<arr.length;i++)
             for(int j=0;j<arr.length-i-1;j++)
                 if(arr[j]>arr[j+1]){
                     int t=arr[j]; arr[j]=arr[j+1]; arr[j+1]=t;
                 }
-        System.out.println(Arrays.toString(arr));
 
-        // UC17 (Arrays.sort)
+        // UC17
         String[] names={"Sleeper","AC","Engine"};
         Arrays.sort(names);
-        System.out.println(Arrays.toString(names));
+
+        // ---------------- UC18 ----------------
+        System.out.println("\n--- UC18: Linear Search ---");
+
+        String[] bogieIds = {"B1", "B2", "B3", "B4"};
+        String searchKey = "B3";
+
+        boolean found = false;
+
+        for (String id : bogieIds) {
+            if (id.equals(searchKey)) {
+                found = true;
+                break; // early stop
+            }
+        }
+
+        if (found) {
+            System.out.println("Bogie Found");
+        } else {
+            System.out.println("Bogie Not Found");
+        }
     }
 
     static void validateCargo(GoodsBogie g){
