@@ -17,7 +17,6 @@ public class TrainConsistManagementApp {
         train.add("Sleeper");
         train.add("AC Chair");
         train.add("First Class");
-
         train.remove("AC Chair");
 
         if (train.contains("Sleeper")) {
@@ -62,22 +61,31 @@ public class TrainConsistManagementApp {
 
 
         // ---------------- UC7 ----------------
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 60));
-        bogies.add(new Bogie("First Class", 24));
+        List<PassengerBogie> bogies = new ArrayList<>();
+
+        try {
+            bogies.add(new PassengerBogie("Sleeper", 72));
+            bogies.add(new PassengerBogie("AC Chair", 60));
+            bogies.add(new PassengerBogie("First Class", 24));
+
+            // ❌ INVALID (will throw exception)
+            bogies.add(new PassengerBogie("Invalid", 0));
+
+        } catch (InvalidCapacityException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
 
         bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
 
         // ---------------- UC8 ----------------
-        List<Bogie> filtered = bogies.stream()
+        List<PassengerBogie> filtered = bogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
 
 
         // ---------------- UC9 ----------------
-        Map<String, List<Bogie>> grouped = bogies.stream()
+        Map<String, List<PassengerBogie>> grouped = bogies.stream()
                 .collect(Collectors.groupingBy(b -> b.capacity >= 60 ? "High" : "Low"));
 
 
@@ -111,59 +119,76 @@ public class TrainConsistManagementApp {
 
 
         // ---------------- UC13 ----------------
-        System.out.println("\n--- UC13: Performance Comparison ---");
+        System.out.println("\n--- UC13: Performance ---");
 
-        List<Bogie> bigList = new ArrayList<>();
+        List<PassengerBogie> bigList = new ArrayList<>();
 
-        // create large data for testing
         for (int i = 0; i < 100000; i++) {
-            bigList.add(new Bogie("B" + i, i % 100));
+            try {
+                bigList.add(new PassengerBogie("B" + i, i % 100 + 1));
+            } catch (InvalidCapacityException e) {
+                // won't happen here
+            }
         }
 
-        // ----- Loop-Based -----
         long startLoop = System.nanoTime();
 
-        List<Bogie> loopResult = new ArrayList<>();
-        for (Bogie b : bigList) {
+        List<PassengerBogie> loopResult = new ArrayList<>();
+        for (PassengerBogie b : bigList) {
             if (b.capacity > 50) {
                 loopResult.add(b);
             }
         }
 
         long endLoop = System.nanoTime();
-        long loopTime = endLoop - startLoop;
 
-
-        // ----- Stream-Based -----
         long startStream = System.nanoTime();
 
-        List<Bogie> streamResult = bigList.stream()
+        List<PassengerBogie> streamResult = bigList.stream()
                 .filter(b -> b.capacity > 50)
                 .collect(Collectors.toList());
 
         long endStream = System.nanoTime();
-        long streamTime = endStream - startStream;
 
+        System.out.println("Loop Time: " + (endLoop - startLoop));
+        System.out.println("Stream Time: " + (endStream - startStream));
 
-        System.out.println("Loop Time (ns): " + loopTime);
-        System.out.println("Stream Time (ns): " + streamTime);
 
         sc.close();
     }
 }
 
 
-// ---------------- Classes ----------------
+// ---------------- UC14 CORE ----------------
 
-class Bogie {
+// ✅ Custom Exception
+class InvalidCapacityException extends Exception {
+    public InvalidCapacityException(String message) {
+        super(message);
+    }
+}
+
+
+// ✅ Passenger Bogie with Validation
+class PassengerBogie {
     String name;
     int capacity;
 
-    Bogie(String name, int capacity) {
+    PassengerBogie(String name, int capacity) throws InvalidCapacityException {
+
+        if (capacity <= 0) {
+            throw new InvalidCapacityException(
+                    "Capacity must be greater than 0 for bogie: " + name
+            );
+        }
+
         this.name = name;
         this.capacity = capacity;
     }
 }
+
+
+// ---------------- Existing Classes ----------------
 
 class GoodsBogie {
     String type;
