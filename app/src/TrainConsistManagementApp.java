@@ -62,7 +62,7 @@ public class TrainConsistManagementApp {
             bogies.add(new PassengerBogie("Sleeper", 72));
             bogies.add(new PassengerBogie("AC Chair", 60));
             bogies.add(new PassengerBogie("First Class", 24));
-            bogies.add(new PassengerBogie("Invalid", 0)); // ❌ triggers exception
+            bogies.add(new PassengerBogie("Invalid", 0)); // ❌ exception
         } catch (InvalidCapacityException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -93,7 +93,7 @@ public class TrainConsistManagementApp {
         // ---------------- UC13 ----------------
         List<PassengerBogie> bigList = new ArrayList<>();
 
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 30000; i++) {
             try {
                 bigList.add(new PassengerBogie("B" + i, i % 100 + 1));
             } catch (InvalidCapacityException e) {}
@@ -113,32 +113,48 @@ public class TrainConsistManagementApp {
 
 
         // ---------------- UC15 ----------------
-        System.out.println("\n--- UC15: Cargo Safety Handling ---");
+        System.out.println("\n--- UC15: Cargo Safety ---");
 
         try {
-
-            GoodsBogie unsafe = new GoodsBogie("Rectangular", "Petroleum"); // ❌ NOT allowed
+            GoodsBogie unsafe = new GoodsBogie("Rectangular", "Petroleum");
             validateCargo(unsafe);
-
-            System.out.println("Cargo assigned safely");
-
         } catch (CargoSafetyException e) {
-
             System.out.println("SAFETY ERROR: " + e.getMessage());
-
         } finally {
-
-            System.out.println("Cargo validation completed (logged)");
-
+            System.out.println("Validation completed");
         }
 
-        System.out.println("System continues safely...");
+
+        // ---------------- UC16 ----------------
+        System.out.println("\n--- UC16: Bubble Sort ---");
+
+        int[] capacities = {72, 60, 24, 100, 45};
+
+        // Bubble Sort
+        for (int i = 0; i < capacities.length - 1; i++) {
+
+            for (int j = 0; j < capacities.length - i - 1; j++) {
+
+                if (capacities[j] > capacities[j + 1]) {
+
+                    // swap
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                }
+            }
+        }
+
+        System.out.println("Sorted Capacities:");
+        for (int c : capacities) {
+            System.out.print(c + " ");
+        }
 
         sc.close();
     }
 
 
-    // ✅ Validation Method (UC15)
+    // ---------------- UC15 ----------------
     public static void validateCargo(GoodsBogie bogie) {
 
         if (bogie.type.equals("Rectangular") && bogie.cargo.equals("Petroleum")) {
@@ -186,7 +202,6 @@ class GoodsBogie {
 
 
 // ---------------- UC15 ----------------
-// ✅ Runtime Exception
 class CargoSafetyException extends RuntimeException {
     public CargoSafetyException(String msg) {
         super(msg);
