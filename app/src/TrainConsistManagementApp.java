@@ -8,20 +8,16 @@ public class TrainConsistManagementApp {
 
         // UC1
         List<String> train = new ArrayList<>();
-        System.out.println("Train size: " + train.size());
 
         // UC2
-        train.add("Sleeper");
-        train.add("AC");
-        train.remove("AC");
+        train.add("Sleeper"); train.add("AC"); train.remove("AC");
 
         // UC3
         Set<String> ids = new HashSet<>(Arrays.asList("B1","B2","B2"));
 
         // UC4
         LinkedList<String> ll = new LinkedList<>(Arrays.asList("Engine","Sleeper","Cargo"));
-        ll.add(1,"Pantry");
-        ll.removeFirst(); ll.removeLast();
+        ll.add(1,"Pantry"); ll.removeFirst(); ll.removeLast();
 
         // UC5
         Set<String> set = new LinkedHashSet<>(Arrays.asList("Engine","Sleeper","Sleeper"));
@@ -35,19 +31,15 @@ public class TrainConsistManagementApp {
         try {
             list.add(new PassengerBogie("Sleeper",72));
             list.add(new PassengerBogie("Bad",0));
-        } catch(Exception e){ System.out.println(e.getMessage()); }
+        } catch(Exception e){}
 
-        // UC8
-        list.stream().filter(b->b.capacity>50).forEach(b->System.out.println(b.name));
-
-        // UC9
+        // UC8–UC10
+        list.stream().filter(b->b.capacity>50).toList();
         list.stream().collect(Collectors.groupingBy(b->b.capacity>50?"High":"Low"));
-
-        // UC10
-        int total = list.stream().map(b->b.capacity).reduce(0,Integer::sum);
+        list.stream().map(b->b.capacity).reduce(0,Integer::sum);
 
         // UC11
-        System.out.println(Pattern.matches("TRN-\\d{4}","TRN-1234"));
+        Pattern.matches("TRN-\\d{4}","TRN-1234");
 
         // UC12
         List<GoodsBogie> goods = Arrays.asList(new GoodsBogie("Cylindrical","Petroleum"));
@@ -55,16 +47,12 @@ public class TrainConsistManagementApp {
 
         // UC13
         long t1 = System.nanoTime();
-        list.stream().filter(b->b.capacity>50).toList();
+        list.stream().toList();
         long t2 = System.nanoTime();
-        System.out.println("Time: "+(t2-t1));
 
         // UC15
-        try {
-            validateCargo(new GoodsBogie("Rectangular","Petroleum"));
-        } catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+        try { validateCargo(new GoodsBogie("Rectangular","Petroleum")); }
+        catch(Exception e){}
 
         // UC16
         int[] arr = {5,3,8,1};
@@ -78,26 +66,40 @@ public class TrainConsistManagementApp {
         String[] names={"Sleeper","AC","Engine"};
         Arrays.sort(names);
 
-        // ---------------- UC18 ----------------
-        System.out.println("\n--- UC18: Linear Search ---");
+        // UC18 (Linear Search)
+        String[] idsArr={"B1","B2","B3","B4"};
+        String key="B3";
+        for(String id:idsArr) if(id.equals(key)) break;
 
-        String[] bogieIds = {"B1", "B2", "B3", "B4"};
+
+        // ---------------- UC19 ----------------
+        System.out.println("\n--- UC19: Binary Search ---");
+
+        String[] sortedIds = {"B1","B2","B3","B4","B5"};
         String searchKey = "B3";
 
+        int low = 0, high = sortedIds.length - 1;
         boolean found = false;
 
-        for (String id : bogieIds) {
-            if (id.equals(searchKey)) {
+        while (low <= high) {
+
+            int mid = (low + high) / 2;
+
+            int cmp = sortedIds[mid].compareTo(searchKey);
+
+            if (cmp == 0) {
                 found = true;
-                break; // early stop
+                break;
+            }
+            else if (cmp < 0) {
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
             }
         }
 
-        if (found) {
-            System.out.println("Bogie Found");
-        } else {
-            System.out.println("Bogie Not Found");
-        }
+        System.out.println(found ? "Bogie Found" : "Bogie Not Found");
     }
 
     static void validateCargo(GoodsBogie g){
@@ -109,8 +111,8 @@ public class TrainConsistManagementApp {
 // Classes
 class PassengerBogie {
     String name; int capacity;
-    PassengerBogie(String n,int c) throws InvalidCapacityException{
-        if(c<=0) throw new InvalidCapacityException("Invalid capacity");
+    PassengerBogie(String n,int c) throws Exception{
+        if(c<=0) throw new Exception();
         name=n; capacity=c;
     }
 }
@@ -118,10 +120,6 @@ class PassengerBogie {
 class GoodsBogie {
     String type,cargo;
     GoodsBogie(String t,String c){ type=t; cargo=c; }
-}
-
-class InvalidCapacityException extends Exception {
-    InvalidCapacityException(String m){ super(m); }
 }
 
 class CargoSafetyException extends RuntimeException {
