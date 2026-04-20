@@ -26,7 +26,7 @@ public class TrainConsistManagementApp {
         System.out.println("After removing AC Chair: " + train);
 
         if (train.contains("Sleeper")) {
-            System.out.println("Sleeper bogie exists in train");
+            System.out.println("Sleeper exists");
         }
 
 
@@ -36,14 +36,13 @@ public class TrainConsistManagementApp {
         Set<String> bogieIds = new HashSet<>();
         bogieIds.add("B1");
         bogieIds.add("B2");
-        bogieIds.add("B3");
         bogieIds.add("B2"); // duplicate
 
         System.out.println("Unique IDs: " + bogieIds);
 
 
         // ---------------- UC4 ----------------
-        System.out.println("\n--- UC4: LinkedList Operations ---");
+        System.out.println("\n--- UC4: LinkedList ---");
 
         LinkedList<String> consist = new LinkedList<>();
         consist.add("Engine");
@@ -52,7 +51,7 @@ public class TrainConsistManagementApp {
         consist.add("Cargo");
         consist.add("Guard");
 
-        consist.add(2, "Pantry Car");
+        consist.add(2, "Pantry");
 
         consist.removeFirst();
         consist.removeLast();
@@ -61,7 +60,7 @@ public class TrainConsistManagementApp {
 
 
         // ---------------- UC5 ----------------
-        System.out.println("\n--- UC5: LinkedHashSet Order ---");
+        System.out.println("\n--- UC5: LinkedHashSet ---");
 
         LinkedHashSet<String> formation = new LinkedHashSet<>();
         formation.add("Engine");
@@ -74,63 +73,56 @@ public class TrainConsistManagementApp {
 
 
         // ---------------- UC6 ----------------
-        System.out.println("\n--- UC6: Capacity Mapping ---");
+        System.out.println("\n--- UC6: HashMap Capacity ---");
 
-        HashMap<String, Integer> capacityMap = new HashMap<>();
-        capacityMap.put("Sleeper", 72);
-        capacityMap.put("AC Chair", 60);
-        capacityMap.put("First Class", 24);
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("Sleeper", 72);
+        map.put("AC Chair", 60);
+        map.put("First Class", 24);
 
-        for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            System.out.println(e.getKey() + " -> " + e.getValue());
         }
 
 
         // ---------------- UC7 ----------------
-        System.out.println("\n--- UC7: Sorting Bogies ---");
+        System.out.println("\n--- UC7: Sorting ---");
 
-        List<Bogie> bogieList = new ArrayList<>();
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 60));
-        bogieList.add(new Bogie("First Class", 24));
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("First Class", 24));
 
-        bogieList.sort(Comparator.comparingInt(b -> b.capacity));
+        bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
-        for (Bogie b : bogieList) {
+        for (Bogie b : bogies) {
             System.out.println(b.name + " -> " + b.capacity);
         }
 
 
         // ---------------- UC8 ----------------
-        System.out.println("\n--- UC8: Filtering (capacity > 60) ---");
+        System.out.println("\n--- UC8: Filtering ---");
 
-        List<Bogie> filtered = bogieList.stream()
+        List<Bogie> filtered = bogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
 
-        for (Bogie b : filtered) {
-            System.out.println(b.name + " -> " + b.capacity);
-        }
+        filtered.forEach(b -> System.out.println(b.name));
 
 
         // ---------------- UC9 ----------------
         System.out.println("\n--- UC9: Grouping ---");
 
-        Map<String, List<Bogie>> grouped = bogieList.stream()
+        Map<String, List<Bogie>> grouped = bogies.stream()
                 .collect(Collectors.groupingBy(b -> b.capacity >= 60 ? "High" : "Low"));
 
-        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
-            System.out.println(entry.getKey() + ":");
-            for (Bogie b : entry.getValue()) {
-                System.out.println("  " + b.name);
-            }
-        }
+        System.out.println(grouped);
 
 
         // ---------------- UC10 ----------------
         System.out.println("\n--- UC10: Total Capacity ---");
 
-        int total = bogieList.stream()
+        int total = bogies.stream()
                 .map(b -> b.capacity)
                 .reduce(0, Integer::sum);
 
@@ -142,29 +134,40 @@ public class TrainConsistManagementApp {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter Train ID (TRN-1234): ");
+        System.out.print("Enter Train ID: ");
         String trainId = sc.nextLine();
 
-        System.out.print("Enter Cargo Code (PET-AB): ");
-        String cargoCode = sc.nextLine();
+        System.out.print("Enter Cargo Code: ");
+        String cargo = sc.nextLine();
 
-        // regex patterns
-        Pattern trainPattern = Pattern.compile("TRN-\\d{4}");
-        Pattern cargoPattern = Pattern.compile("PET-[A-Z]{2}");
+        Pattern p1 = Pattern.compile("TRN-\\d{4}");
+        Pattern p2 = Pattern.compile("PET-[A-Z]{2}");
 
-        Matcher trainMatcher = trainPattern.matcher(trainId);
-        Matcher cargoMatcher = cargoPattern.matcher(cargoCode);
+        System.out.println(p1.matcher(trainId).matches() ? "Valid Train ID" : "Invalid Train ID");
+        System.out.println(p2.matcher(cargo).matches() ? "Valid Cargo Code" : "Invalid Cargo Code");
 
-        if (trainMatcher.matches()) {
-            System.out.println("Valid Train ID");
+
+        // ---------------- UC12 ----------------
+        System.out.println("\n--- UC12: Safety Validation (Lambda) ---");
+
+        List<GoodsBogie> goods = new ArrayList<>();
+
+        goods.add(new GoodsBogie("Open", "Coal"));
+        goods.add(new GoodsBogie("Covered", "Grain"));
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum")); // valid
+
+        // RULE:
+        // Cylindrical → ONLY Petroleum allowed
+
+        boolean isSafe = goods.stream().allMatch(g ->
+                (!g.type.equals("Cylindrical")) ||
+                (g.type.equals("Cylindrical") && g.cargo.equals("Petroleum"))
+        );
+
+        if (isSafe) {
+            System.out.println("Train is SAFE");
         } else {
-            System.out.println("Invalid Train ID");
-        }
-
-        if (cargoMatcher.matches()) {
-            System.out.println("Valid Cargo Code");
-        } else {
-            System.out.println("Invalid Cargo Code");
+            System.out.println("Train is NOT SAFE");
         }
 
         sc.close();
@@ -172,7 +175,8 @@ public class TrainConsistManagementApp {
 }
 
 
-// Bogie class
+// ---------------- Classes ----------------
+
 class Bogie {
     String name;
     int capacity;
@@ -180,5 +184,15 @@ class Bogie {
     Bogie(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
+    }
+}
+
+class GoodsBogie {
+    String type;
+    String cargo;
+
+    GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
     }
 }
